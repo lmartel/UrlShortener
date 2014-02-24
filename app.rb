@@ -1,28 +1,60 @@
 require 'rubygems'
 require 'sinatra'
+require 'rack/csrf'
 require 'sequel'
 require 'sqlite3'
 
-[ 'DATABASE_URL', 'LINK_LENGTH' ].each do |var|
+# Make sure ENV is set up properly
+[ 'DATABASE_URL', 'LINK_LENGTH', 'SECRET_TOKEN' ].each do |var|
     raise "Missing environment variable: #{var}" unless ENV[var]
 end
 
+# CSRF setup and helpers
+configure do
+    use Rack::Session::Cookie, secret: ENV['SECRET_TOKEN']
+    use Rack::Protection, except: :http_origin
+end
+
+helpers do
+    def csrf_token
+        Rack::Csrf.csrf_token(env)
+    end
+
+    def csrf_tag
+        Rack::Csrf.csrf_tag(env)
+    end
+
+    def render_link_page(link)
+        @link = link
+        erb :link
+    end
+end
+
+# Connect to database
 DB = Sequel.connect(ENV['DATABASE_URL'])
 Sequel.extension :migration
 
 # TODO:
-# Analytics, track with either email auth or password
+# Add footer explaining "!", link back to homepage
+# Figure out how prominently to display list
+# Private links, track with either email auth or password
+# Track request referrers
 
 class Link < Sequel::Model
     @@character_set = "0123456789abcdefghijklmnopqrstuvwxyz".split("")
     @@attempts_max = 8
 
+    def self.prepend_protocol(url)
+        return url if url.match(/^https?:\/\//)
+        "http://#{url}"
+    end
+
     def self.new_url?(url)
-        Link[url: url].nil?
+        Link[url: prepend_protocol(url)].nil?
     end
 
     def before_create
-        self.url = "http://#{self.url}" unless url.match(/^https?:\/\//)
+        self.url = Link.prepend_protocol(url)
         shorten!
     end
 
@@ -32,7 +64,9 @@ class Link < Sequel::Model
             attempts += 1
             len += 1 if attempts > @@attempts_max 
             self.short_url = (1..len).map { @@character_set.sample }.join
-            break unless Link[short_url: short_url]
+            next unless self.short_url.match(/[a-z]/) # should include one letter (all numbers looks weird)
+            next unless self.short_url.match(/[0-9]/) # should include one number (all letters looks not random enough)
+            break unless Link[short_url: short_url] # must not reuse short_urls
         end
     end
 end
@@ -41,11 +75,19 @@ get '/:param?' do |url|
     if url == "links"
         erb :links
     elsif url
-        link = Link[short_url: url]
-        if link
-            redirect link.url
+
+        # /short_url! => view stats page for this link
+        if url[-1] == '!' 
+            render_link_page(Link[short_url: url[0..-2]])
+        elsif link = Link[short_url: url]
+            link.visits += 1
+            link.save
+
+            # 301 Moved Permanently [to avoid messing up target site's Google Analytics etc]
+            redirect link.url, 301
         else
-            erb :notfound
+            # 302 Moved Temporarily [this shorturl is not currently in use, but may be eventually]
+            redirect 'http://lpm.io/404', 302
         end
     else
         erb :index
@@ -53,21 +95,20 @@ get '/:param?' do |url|
 end
 
 get '/links/:short_url' do |short_url|
-    @link = Link[short_url: short_url]
-    erb :link
+    render_link_page(Link[short_url: short_url])
 end
 
 post '/links' do
-    url = params[:url]
+    url = Link.prepend_protocol(params[:url])
     if url && Link.new_url?(url)
-        @link = Link.create(url: url)
+        short_url = Link.create(url: url).short_url
     elsif url
-        @link = Link[url: url]
+        short_url = Link[url: url].short_url
+    else
+        short_url = ""
     end
-    erb :link
+    redirect "/#{short_url}!"
 end
-
-
 
 # Link.create(url: "google.com") if Link.new_url?("google.com")
 # Link.create(url: "yahoo.com") if Link.new_url?("yahoo.com")

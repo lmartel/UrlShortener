@@ -4,6 +4,8 @@ GEM
     rack (1.5.2)
     rack-protection (1.5.2)
       rack
+    rack_csrf (2.4.0)
+      rack (>= 0.9)
     rake (10.1.0)
     sequel (4.7.0)
     sinatra (1.4.4)
@@ -17,6 +19,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  rack_csrf
   rake
   sequel
   sinatra

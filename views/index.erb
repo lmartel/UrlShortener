@@ -1,1 +1,9 @@
-Hello world. This is the index page.
+<h1>Welcome to the <a href="lpm.io">lpm.io</a> URL shortener!</h1>
+
+<form class="create-link" action="/links" method="POST">
+    <h2 class="create-link-heading">Enter a link to shorten:</h2>
+    <input type="text" name="url" placeholder="Paste URL here">
+    <input type="hidden" name="_method" value="post">
+    <%= csrf_tag %>
+    <button type="submit">Shorten!</button>
+</form>

@@ -1,5 +1,5 @@
 <% if @link %>
-	<%= "#{@link.short_url} => #{@link.url}" %>
+	<a href="/<%= @link.short_url %>"><%= @link.short_url %></a> => <%= @link.url %> (<%= @link.visits %> unique visitor<%= @link.visits == 1 ? "" : "s" %>)
 <% else %>
-	No link created.
+	No link found.
 <% end %>
