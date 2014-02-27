@@ -2,6 +2,6 @@
 
 <ul>
 <% Link.each do |link| %>
-    <li><%= @link = link; erb :link %></li>
-<% end %>
+    <li><%= @link = link; erb :link_info %></li>
+<% end %><% @link = nil %>
 </ul>

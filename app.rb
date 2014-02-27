@@ -34,12 +34,6 @@ end
 DB = Sequel.connect(ENV['DATABASE_URL'])
 Sequel.extension :migration
 
-# TODO:
-# Add footer explaining "!", link back to homepage
-# Figure out how prominently to display list
-# Private links, track with either email auth or password
-# Track request referrers
-
 class Link < Sequel::Model
     @@character_set = "0123456789abcdefghijklmnopqrstuvwxyz".split("")
     @@attempts_max = 8

@@ -1,0 +1,5 @@
+<% if @link %>
+	<a href="/<%= @link.short_url %>">lpm.io/<%= @link.short_url %></a> => <%= @link.url %> (<%= @link.visits %> unique visitor<%= @link.visits == 1 ? "" : "s" %>)
+<% else %>
+	No link found.
+<% end %>

@@ -1,0 +1,9 @@
+<footer>
+Append '!' to your url 
+<% if @link %>
+	(<a href="/<%= @link.short_url %>!">lpm.io/<%= @link.short_url %>!</a>)
+<% end %>
+to see its usage statistics.
+<br><br>
+<a href="/">Shorten another link</a>
+</footer>
