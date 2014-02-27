@@ -2,17 +2,37 @@ require 'rubygems'
 require 'sinatra'
 require 'rack/csrf'
 require 'sequel'
-require 'sqlite3'
+
+require 'pg'
+require 'newrelic_rpm'
 
 # Make sure ENV is set up properly
-[ 'DATABASE_URL', 'LINK_LENGTH', 'SECRET_TOKEN' ].each do |var|
-    raise "Missing environment variable: #{var}" unless ENV[var]
+def check_env(vars)
+    vars = [vars] unless vars.kind_of?(Array)
+    vars.each do |var|
+        raise "Missing environment variable: #{var}" unless ENV[var]
+    end
 end
 
-# CSRF setup and helpers
+configure :production do
+  check_env 'HEROKU_POSTGRESQL_RED_URL'
+
+  DB = Sequel.connect(ENV['HEROKU_POSTGRESQL_RED_URL'])
+end
+
+configure :development do
+  check_env 'DATABASE_URL'
+
+  DB = Sequel.connect(ENV['DATABASE_URL'])
+end
+
+# Global setup, incl. CSRF protection
 configure do
+    check_env [ 'LINK_LENGTH', 'SECRET_TOKEN' ]
+
     use Rack::Session::Cookie, secret: ENV['SECRET_TOKEN']
     use Rack::Protection, except: :http_origin
+    Sequel.extension :migration
 end
 
 helpers do
@@ -31,8 +51,6 @@ helpers do
 end
 
 # Connect to database
-DB = Sequel.connect(ENV['DATABASE_URL'])
-Sequel.extension :migration
 
 class Link < Sequel::Model
     @@character_set = "0123456789abcdefghijklmnopqrstuvwxyz".split("")

@@ -1,6 +1,8 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    newrelic_rpm (3.7.2.195)
+    pg (0.17.1)
     rack (1.5.2)
     rack-protection (1.5.2)
       rack
@@ -19,6 +21,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  newrelic_rpm
+  pg
   rack_csrf
   rake
   sequel
