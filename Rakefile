@@ -33,3 +33,12 @@ namespace :db do
     Rake::Task['db:version'].execute
   end    
 end
+
+namespace :secret do
+  require "securerandom"
+  
+  desc "Generate a new CSRF secret token"
+  task :generate do
+    puts SecureRandom.hex(64)  
+  end
+end

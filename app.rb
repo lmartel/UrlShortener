@@ -18,12 +18,16 @@ configure :production do
   check_env 'HEROKU_POSTGRESQL_RED_URL'
 
   DB = Sequel.connect(ENV['HEROKU_POSTGRESQL_RED_URL'])
+  HOST = "http://"
+  ROOT = "lpm.io/"
 end
 
 configure :development do
   check_env 'DATABASE_URL'
 
   DB = Sequel.connect(ENV['DATABASE_URL'])
+  HOST = "."
+  ROOT = "/"
 end
 
 # Global setup, incl. CSRF protection
@@ -47,6 +51,14 @@ helpers do
     def render_link_page(link)
         @link = link
         erb :link
+    end
+
+    def path(dest)
+        HOST + pretty_path(dest)
+    end
+
+    def pretty_path(dest)
+        ROOT + dest
     end
 end
 
