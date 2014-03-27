@@ -36,7 +36,11 @@ class UrlShortener < Sinatra::Base
     def self.check_env(vars)
         vars = [vars] unless vars.kind_of?(Array)
         vars.each do |var|
-            raise "Missing environment variable: #{var}" unless ENV[var]
+            unless ENV[var]
+                err = "Missing environment variable: #{var}" 
+                puts err
+                raise err
+            end
         end
     end
 
