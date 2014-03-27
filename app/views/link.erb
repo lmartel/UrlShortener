@@ -1,0 +1,15 @@
+<div id="link-page-header">
+<%= erb :header %>
+<h1 id="link-page-info"><span class="rocket">=></span><%= snip_protocol(@link.url) %></h1>
+</div>
+<h3 id="clicks"><%= erb :clicks %> so far</h3>
+<h3><%= erb :footer %></h3>
+<br><br>
+<h5><a class="shorten-another" href="/">[shorten another]</a></h5>
+<script type="text/javascript">
+// Move the text out of the way of the full rendered link
+var BASE = 22;
+var size = document.getElementById("link-page-info").clientHeight;
+size = Math.max(BASE, size - BASE);
+document.getElementById("clicks").style.marginTop = size + "px";
+</script>

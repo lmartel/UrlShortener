@@ -1,0 +1,9 @@
+<footer>
+<% if @link %>
+	use
+    <a class="stats-link" href="<%= path(@link.short_url) %>!"><%= pretty_path(@link.short_url) %>!</a>
+    to get back here.
+<% else %>
+Add '!' to a link to see its usage statistics.
+<% end %>
+</footer>

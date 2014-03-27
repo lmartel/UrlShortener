@@ -1,0 +1,68 @@
+@import "scheme.less";
+@import "bootstrap/bootstrap.less";
+@import "1pxdeep.less";
+
+// Placeholder text coloring for form inputs
+@placeholder-color: @color4;
+::-webkit-input-placeholder { /* WebKit browsers */
+    color: @placeholder-color;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: @placeholder-color;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: @placeholder-color;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: @placeholder-color;
+}
+
+body {
+    text-align: center;
+    font-family: "Lato", sans-serif;
+}
+
+ul {
+    list-style-type: none;
+}
+
+#url-input {
+    font-size: 7rem;
+    color: @color2;
+    background: inherit;
+    outline: none;
+    border: none;
+    margin: 0 auto;
+    padding: 0;
+    height: 140px;
+    text-align: center;
+    display: block;
+}
+
+header {
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+}
+
+#link-page-header {
+    position: relative;
+    display: inline-block;
+}
+
+.rocket {
+    margin: 0 0.2em;
+}
+
+#link-page-info {
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+    position: absolute;
+    top: 0;
+    left: 100%;
+}
+
+.stats-link {
+    color: @color2;
+}
+
+.shorten-another {
+    color: @color3;
+}

@@ -42,3 +42,13 @@ namespace :secret do
     puts SecureRandom.hex(64)  
   end
 end
+
+desc "Run the app on port 4567"
+task :runserver do
+  begin
+    `rackup -p 4567`
+  rescue Interrupt
+    # Suppress "rake aborted" error on SIGINT
+    sleep 0.5
+  end
+end

@@ -1,0 +1,7 @@
+<header>
+<% if @link %>
+    <h1><a href="<%= path(@link.short_url) %>">lpm.io/<%= @link.short_url %></a></h1>
+<% else %>
+    <h1><a href="http://lpm.io">lpm.io</a>/???</h1>
+<% end %>
+</header>
