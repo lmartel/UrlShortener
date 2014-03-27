@@ -16,8 +16,8 @@ class UrlShortener < Sinatra::Base
     assets do
         css_dir = 'assets/css'
         serve '/css',    from: css_dir
-        serve '/js',     from: 'assets/js'
-        serve '/images', from: 'assets/images'
+        # serve '/js',     from: 'assets/js'
+        # serve '/images', from: 'assets/images'
 
         Less.paths << File.join(UrlShortener.root, css_dir)
 
