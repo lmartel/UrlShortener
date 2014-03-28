@@ -71,8 +71,3 @@ class UrlShortener < Sinatra::Base
 end
 
 require_relative 'init'
-
-    # Link.create(url: "google.com") if Link.new_url?("google.com")
-    # Link.create(url: "yahoo.com") if Link.new_url?("yahoo.com")
-    # Link.each { |l| puts l.values; l.destroy }
-
