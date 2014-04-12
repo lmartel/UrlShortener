@@ -1,7 +1,13 @@
 namespace :db do
-  require "sequel"
+  require_relative 'app/models/init' # opens DB connection, loads Sequel models
   Sequel.extension :migration
-  DB = Sequel.connect(ENV['DATABASE_URL'])
+
+  desc "Opens ruby console with database connection"
+  task :console do
+    require 'irb'
+    ARGV.clear
+    IRB.start
+  end
   
   desc "Prints current schema version"
   task :version do    
@@ -35,10 +41,9 @@ namespace :db do
 end
 
 namespace :secret do
-  require "securerandom"
-  
   desc "Generate a new CSRF secret token"
   task :generate do
+    require "securerandom"
     puts SecureRandom.hex(64)  
   end
 end
