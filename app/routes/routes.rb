@@ -19,6 +19,7 @@ class UrlShortener < Sinatra::Base
                 redirect 'http://lpm.io/404', 302
             end
         else
+            @err = params[:err].to_sym if params[:err]
             partial :index
         end
     end
@@ -28,13 +29,17 @@ class UrlShortener < Sinatra::Base
     end
 
     post '/links' do
-        url = Link.prepend_protocol(params[:url])
-        if url && Link.new_url?(url)
+        url = params[:url]
+        return redirect '/' unless url
+
+        url.strip!
+        url = Link.prepend_protocol(url)
+        return redirect '/?err=invalid' unless Link.valid_url?(url)
+
+        if Link.new_url?(url)
             short_url = Link.create(url: url).short_url
-        elsif url
-            short_url = Link.find(url: url).short_url
         else
-            short_url = ""
+            short_url = Link.find(url: url).short_url
         end
         redirect "/#{short_url}!"
     end

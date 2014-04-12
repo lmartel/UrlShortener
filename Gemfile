@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.0.0'
+ruby '2.1.1'
 
 gem 'rake'
 gem 'sinatra'
@@ -12,6 +12,12 @@ gem 'sequel'
 gem 'therubyracer'
 gem 'less'
 
+# Dev db
+group :development do
+    gem 'sqlite3'
+end
+
 # Heroku addons
-gem 'pg'
-gem 'newrelic_rpm'
+group :production do
+    gem 'pg'
+end

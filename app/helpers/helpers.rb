@@ -28,6 +28,16 @@ module UrlShortenerHelpers
         partial :link
     end
 
+    def error_message(code)
+        case code
+        when :invalid
+            "invalid url; try again?"
+        else
+            puts "UNKNOWN ERROR CODE: #{code}"
+            "an unknown error ocurred."
+        end
+    end
+
     def path(dest)
         UrlShortener::HOST + pretty_path(dest)
     end

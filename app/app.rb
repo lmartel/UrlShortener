@@ -5,9 +5,6 @@ require 'rack/csrf'
 require 'sequel'
 require 'less'
 
-require 'pg'
-require 'newrelic_rpm'
-
 # App configuration: AssetPack, database, CSRF setup.
 # Also checks that environment variables are properly set up.
 class UrlShortener < Sinatra::Base
@@ -45,16 +42,18 @@ class UrlShortener < Sinatra::Base
     end
 
     configure :production do
+      Bundler.require :production
+      
       check_env 'HEROKU_POSTGRESQL_RED_URL'
-
       DB_URL = ENV['HEROKU_POSTGRESQL_RED_URL']
       HOST = "http://"
       ROOT = "lpm.io/"
     end
 
     configure :development do
-      check_env 'DATABASE_URL'
+      Bundler.require :development
 
+      check_env 'DATABASE_URL'
       DB_URL = ENV['DATABASE_URL']
       HOST = "."
       ROOT = "/"

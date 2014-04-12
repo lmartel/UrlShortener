@@ -4,4 +4,7 @@
 <% else %>
     <h1><a href="http://lpm.io">lpm.io</a>/???</h1>
 <% end %>
+<% if @err %>
+    <h3><%= error_message(@err) %></h3>
+<% end %>
 </header>

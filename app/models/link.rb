@@ -1,10 +1,22 @@
+require 'URI' unless defined?(URI)
+
 class Link < Sequel::Model
     @@character_set = "0123456789abcdefghijklmnopqrstuvwxyz".split("")
     @@attempts_max = 8
 
     def self.prepend_protocol(url)
+        return nil if url.nil?
         return url if url.match(/^https?:\/\//)
         "http://#{url}"
+    end
+
+    def self.valid_url?(url)
+        begin
+            URI.parse url
+        rescue URI::InvalidURIError => e
+            return false
+        end
+        true
     end
 
     def self.new_url?(url)
