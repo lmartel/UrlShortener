@@ -18,6 +18,18 @@ module UrlShortenerHelpers
         @auth.provided? and @auth.basic? and @auth.credentials and @auth.credentials == ['admin', ENV['ADMIN_PASSWORD']]
     end
 
+    def make_link(url)
+        url.strip!
+        url = Link.prepend_protocol(url)
+        return false unless Link.valid_url?(url)
+
+        if Link.new_url?(url)
+            Link.create(url: url)
+        else
+            Link.find(url: url)
+        end
+    end
+
     def partial(template)
         @template = template;
         erb :application

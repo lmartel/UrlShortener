@@ -1,3 +1,5 @@
+require 'json'
+
 class UrlShortener < Sinatra::Base
     get '/:param?' do |url|
         if url == "links"
@@ -31,16 +33,22 @@ class UrlShortener < Sinatra::Base
     post '/links' do
         url = params[:url]
         return redirect '/' unless url
-
-        url.strip!
-        url = Link.prepend_protocol(url)
-        return redirect '/?err=invalid' unless Link.valid_url?(url)
-
-        if Link.new_url?(url)
-            short_url = Link.create(url: url).short_url
+        link = make_link(url)
+        if link
+            redirect "/#{link.short_url}!"
         else
-            short_url = Link.find(url: url).short_url
+            redirect '/?err=invalid'
         end
-        redirect "/#{short_url}!"
+    end
+
+    post '/links.json' do
+        url = params[:url]
+        return '{}' unless url
+        link = make_link(url)
+        if link
+            {success: true, url: link.url, short_url: path(link.short_url)}.to_json
+        else
+            {success: false, url: link.url}.to_json
+        end
     end
 end
