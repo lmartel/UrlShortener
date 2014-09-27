@@ -5,6 +5,8 @@ class UrlShortener < Sinatra::Base
         if url == "links"
             protected!
             partial :links
+        elsif url && url.downcase == '2ez'
+            partial :index
         elsif url
 
             # /short_url! => view stats page for this link
